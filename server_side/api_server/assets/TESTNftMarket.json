@@ -1,0 +1,903 @@
+[
+  {
+    "inputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingDeposit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "buyNowPrimaryFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bidPrimaryFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "makerFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "takerFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ttl",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct INftMarket.MarketData",
+        "name": "marketData",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum INftMarket.State",
+        "name": "closedState",
+        "type": "uint8"
+      }
+    ],
+    "name": "AuctionClosed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "seller",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "itemAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "itemId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum INftMarket.Type",
+        "name": "auctionType",
+        "type": "uint8"
+      }
+    ],
+    "name": "AuctionCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "bidId",
+        "type": "uint256"
+      }
+    ],
+    "name": "BidActivated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "bidder",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "bidId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "BidCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "bidId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum INftMarket.BidState",
+        "name": "newBidState",
+        "type": "uint8"
+      }
+    ],
+    "name": "BidDeactivated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "ManagerAdded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "ManagerRemoved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "enum INftMarket.FeeParam",
+        "name": "param",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "oldValue",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newValue",
+        "type": "uint256"
+      }
+    ],
+    "name": "MarketFeeUpdate",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "collectingManager",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountCollected",
+        "type": "uint256"
+      }
+    ],
+    "name": "MarketFeesCollected",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "oldValue",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newValue",
+        "type": "uint256"
+      }
+    ],
+    "name": "MarketTTLUpdate",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "beneficiary",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountCollected",
+        "type": "uint256"
+      }
+    ],
+    "name": "RoyaltyCollected",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "_feeBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "addManager",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "isManager",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bytes",
+        "name": "",
+        "type": "bytes"
+      }
+    ],
+    "name": "onERC721Received",
+    "outputs": [
+      {
+        "internalType": "bytes4",
+        "name": "",
+        "type": "bytes4"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "renounceManager",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum INftMarket.Type",
+        "name": "auctionType",
+        "type": "uint8"
+      },
+      {
+        "internalType": "contract IERC721",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "startingBid",
+        "type": "uint256"
+      }
+    ],
+    "name": "create",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "bid",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bidId",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelBid",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "accept",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "cancelAuction",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "contract INftERC721",
+        "name": "token",
+        "type": "address"
+      }
+    ],
+    "name": "collectRoyalties",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getMarketData",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "listingDeposit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "buyNowPrimaryFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bidPrimaryFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "makerFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "takerFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "royaltyFee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ttl",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct INftMarket.MarketData",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalAuctions",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getAuction",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "seller",
+            "type": "address"
+          },
+          {
+            "internalType": "enum INftMarket.Type",
+            "name": "auctionType",
+            "type": "uint8"
+          },
+          {
+            "components": [
+              {
+                "internalType": "contract IERC721",
+                "name": "token",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address",
+                "name": "minter",
+                "type": "address"
+              }
+            ],
+            "internalType": "struct INftMarket.Item",
+            "name": "auctionItem",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "listingDeposit",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ttl",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "safetyThreshold",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startingBid",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum INftMarket.State",
+            "name": "state",
+            "type": "uint8"
+          },
+          {
+            "components": [
+              {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+              },
+              {
+                "internalType": "address payable",
+                "name": "bidder",
+                "type": "address"
+              },
+              {
+                "internalType": "uint256",
+                "name": "amount",
+                "type": "uint256"
+              },
+              {
+                "internalType": "uint256",
+                "name": "fee",
+                "type": "uint256"
+              },
+              {
+                "internalType": "enum INftMarket.BidState",
+                "name": "state",
+                "type": "uint8"
+              }
+            ],
+            "internalType": "struct INftMarket.Bid",
+            "name": "highBid",
+            "type": "tuple"
+          },
+          {
+            "internalType": "uint256",
+            "name": "bidCount",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct INftMarket.BaseAuction",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "isActive",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "totalBids",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getHighBid",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address payable",
+            "name": "bidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum INftMarket.BidState",
+            "name": "state",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct INftMarket.Bid",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "auctionId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "bidId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getBid",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address payable",
+            "name": "bidder",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "fee",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum INftMarket.BidState",
+            "name": "state",
+            "type": "uint8"
+          }
+        ],
+        "internalType": "struct INftMarket.Bid",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum INftMarket.FeeParam",
+        "name": "param",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "base",
+        "type": "uint256"
+      }
+    ],
+    "name": "calcFee",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "checkFeeBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "creator",
+        "type": "address"
+      }
+    ],
+    "name": "checkRoyalty",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "newDeposit",
+        "type": "uint256"
+      }
+    ],
+    "name": "setListingDeposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "enum INftMarket.FeeParam",
+        "name": "param",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "newFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMarketFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "newTime",
+        "type": "uint256"
+      }
+    ],
+    "name": "setTTL",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "collectFees",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
