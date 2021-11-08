@@ -1,9 +1,10 @@
-pragma solidity ^0.8.0;
+pragma solidity >=0.6.0 <0.8.0;
 import "./Context.sol";
 import "./IERC721.sol";
 import "./ERC165.sol";
 import "./IERC721Metadata.sol";
 import "./IERC721Enumerable.sol";
+import "./IERC721Receiver.sol";
 import "./SafeMath.sol";
 import "./Address.sol";
 import "./EnumerableSet.sol";
