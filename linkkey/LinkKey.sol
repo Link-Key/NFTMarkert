@@ -20,8 +20,10 @@ contract LinkKeyINO is ERC721, Ownable {
         MAX_KEYS = maxNftSupply;
     }
 
-    modifier lockedPosition(){
-        require(((balanceOf(owner()) < 1) && (totalSupply() == MAX_KEYS)) || _msgSender() == owner() || isApprovedForAll(owner(), _msgSender()), "token can not transfer before lock position.");
+    modifier lockedPosition(uint256 tokenId){
+        require(((balanceOf(owner()) < 1) && (totalSupply() == MAX_KEYS))
+        || _msgSender() == owner() || isApprovedForAll(owner(), _msgSender())
+        || (ERC721.getApproved(tokenId) == _msgSender() && ERC721.ownerOf(tokenId) == owner()), "token can not transfer before lock position.");
         _;
     }
 
@@ -59,35 +61,35 @@ contract LinkKeyINO is ERC721, Ownable {
     /**
      * @dev See {ERC721-approve}.
      */
-    function approve(address to, uint256 tokenId) public virtual override lockedPosition {
+    function approve(address to, uint256 tokenId) public virtual override lockedPosition(tokenId) {
         super.approve(to, tokenId);
     }
 
     /**
      * @dev See {ERC721-setApprovalForAll}.
      */
-    function setApprovalForAll(address operator, bool approved) public virtual override lockedPosition{
+    function setApprovalForAll(address operator, bool approved) public virtual override lockedPosition(0){
         super.setApprovalForAll(operator, approved);
     }
 
     /**
      * @dev See {ERC721-transferFrom}.
      */
-    function transferFrom(address from, address to, uint256 tokenId) public virtual override lockedPosition{
+    function transferFrom(address from, address to, uint256 tokenId) public virtual override lockedPosition(tokenId){
         super.transferFrom(from, to, tokenId);
     }
 
     /**
      * @dev See {ERC721-safeTransferFrom}.
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId) public virtual override lockedPosition{
+    function safeTransferFrom(address from, address to, uint256 tokenId) public virtual override lockedPosition(tokenId){
         super.safeTransferFrom(from, to, tokenId);
     }
 
     /**
      * @dev See {ERC721-safeTransferFrom}.
      */
-    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public virtual override lockedPosition{
+    function safeTransferFrom(address from, address to, uint256 tokenId, bytes memory _data) public virtual override lockedPosition(tokenId){
         super.safeTransferFrom(from, to, tokenId, _data);
     }
 }
